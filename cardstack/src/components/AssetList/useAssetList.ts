@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect, useMemo, RefObject } from 'react';
 import { SectionList } from 'react-native';
 
 import { useIsFetchingDataNewAccount } from '@cardstack/hooks';
+import { deletePin } from '@cardstack/models/secure-storage';
 import { Routes } from '@cardstack/navigation';
 import { useGetServiceStatusQuery } from '@cardstack/services';
 
@@ -89,7 +90,9 @@ export const useAssetList = ({
 
   const { isDamaged } = useWallets();
 
-  const goToBuyPrepaidCard = useCallback(() => {
+  const goToBuyPrepaidCard = useCallback(async () => {
+    await deletePin();
+
     if (isDamaged) {
       showWalletErrorAlert();
 

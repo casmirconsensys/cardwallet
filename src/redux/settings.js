@@ -52,7 +52,6 @@ export const settingsLoadNetwork = () => async dispatch => {
   try {
     const network = await getNetwork();
     const chainId = ethereumUtils.getChainIdFromNetwork(network);
-    await etherWeb3SetHttpProvider(network);
 
     // Creates tag on Sentry labeling the current network.
     logger.setTag('network', network);
@@ -122,7 +121,7 @@ export const settingsChangeNativeCurrency = nativeCurrency => async dispatch => 
 
 // -- Reducer --------------------------------------------------------------- //
 export const INITIAL_STATE = {
-  accountAddress: '',
+  accountAddress: 'initial',
   chainId: 100,
   language: 'en',
   nativeCurrency: 'USD',

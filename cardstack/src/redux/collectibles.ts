@@ -197,7 +197,8 @@ const fetchNFTsViaRpcNode = () => async (
 
   // enhance them with metadata from the tokenURI so that they have a similar shape to what parseCollectiblesFromOpenSeaResponse creates
   try {
-    const web3Provider = await getEtherWeb3Provider();
+    console.log({ network });
+    const web3Provider = await getEtherWeb3Provider(network, 'collectibles');
 
     const collectibles = (
       await Promise.all(

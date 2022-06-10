@@ -160,7 +160,10 @@ export const loadWallet = async (): Promise<null | ethers.Wallet> => {
   const privateKey = await loadPrivateKey();
 
   if (privateKey) {
-    const web3Provider = await getEtherWeb3Provider();
+    const web3Provider = await await getEtherWeb3Provider(
+      undefined,
+      'provateKey'
+    );
     return new ethers.Wallet(privateKey, web3Provider);
   }
   if (Device.isIOS) {

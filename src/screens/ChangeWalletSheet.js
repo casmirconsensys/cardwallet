@@ -113,6 +113,7 @@ export default function ChangeWalletSheet() {
         // Nuke apollo data to refetch after changing account
         await apolloClient.clearStore();
         const wallet = wallets[walletId];
+        console.log({ walletId });
         await changeSelectedWallet(wallet, address);
         !fromDeletion && goBack();
       } catch (e) {
@@ -371,7 +372,13 @@ export default function ChangeWalletSheet() {
                     const newWallets = await dispatch(
                       createAccountForWallet(primaryWalletKey, color, name)
                     );
+
+                    console.log({ newWallets });
+
+                    console.log('HEREERE');
                     await initializeWallet();
+
+                    console.log('HEREERE');
                     // If this wallet was previously backed up to the cloud
                     // We need to update userData backup so it can be restored too
                     if (

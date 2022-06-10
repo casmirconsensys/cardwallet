@@ -5,6 +5,7 @@ import Web3 from 'web3';
 
 import { getFCMToken } from '@cardstack/models/firebase';
 import HDProvider from '@cardstack/models/hd-provider';
+import Web3Instance from '@cardstack/models/web3-instance';
 import {
   BusinessIDUniquenessResponse,
   Inventory,
@@ -120,14 +121,19 @@ export const getHubAuthToken = async (
     getWalletByAddress({ walletAddress: address, allWallets })?.id || '';
 
   try {
-    const hdProvider = await HDProvider.get({
+    // const hdProvider = await HDProvider.get({
+    //   walletId,
+    //   network,
+    //   keychainAcessAskPrompt,
+    // });
+
+    // didn't use Web3Instance.get and created new web3 instance to avoid conflicts with asset loading, etc that uses web3 instance
+    const web3 = await Web3Instance.get({
       walletId,
       network,
       keychainAcessAskPrompt,
     });
 
-    // didn't use Web3Instance.get and created new web3 instance to avoid conflicts with asset loading, etc that uses web3 instance
-    const web3 = new Web3(hdProvider);
     const authAPI = await getSDK('HubAuth', web3, hubURL);
     const authToken = await authAPI.authenticate({ from: address });
 

@@ -53,22 +53,27 @@ export const etherWeb3SetHttpProvider = async network => {
  * @param {String} network
  */
 
-export const getEtherWeb3Provider = async (network = undefined) => {
-  let wsConnected = web3Provider.provider?.connected;
-
+export const getEtherWeb3Provider = async (network = undefined, from) => {
+  console.log({ from });
+  let wsConnected = web3Provider?.provider?.connected;
+  let attempts = 0;
   // check websocket state and reconnect if disconnected
-  while (!wsConnected) {
+  while (!wsConnected && attempts < 7) {
     const currentNetwork = network || (await getNetwork());
     await etherWeb3SetHttpProvider(currentNetwork);
     wsConnected = web3Provider.provider?.connected;
-    logger.log('ws restarted', wsConnected, currentNetwork);
+    attempts++;
+    logger.log('ws restarted', { wsConnected, currentNetwork, attempts });
   }
 
   return web3Provider;
 };
 
 export const sendRpcCall = async payload => {
-  const web3ProviderInstance = await getEtherWeb3Provider();
+  const web3ProviderInstance = await getEtherWeb3Provider(
+    undefined,
+    'sendRpcCall'
+  );
   return web3ProviderInstance.send(payload.method, payload.params);
 };
 
@@ -290,7 +295,10 @@ const resolveNameOrAddress = async nameOrAddress => {
     if (/^([\w-]+\.)+(crypto)$/.test(nameOrAddress)) {
       return resolveUnstoppableDomain(nameOrAddress);
     }
-    const web3ProviderInstance = await getEtherWeb3Provider();
+    const web3ProviderInstance = await getEtherWeb3Provider(
+      undefined,
+      'resolveNameOrAddress'
+    );
     return web3ProviderInstance.resolveName(nameOrAddress);
   }
   return nameOrAddress;

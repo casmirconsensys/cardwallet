@@ -58,7 +58,7 @@ export default function useWalletManager() {
   const loadGlobalData = useLoadGlobalData();
   const initializeAccountData = useInitializeAccountData();
 
-  const { network } = useAccountSettings();
+  const { network, accountAddress } = useAccountSettings();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   const { navigate, reset } = useNavigation();
@@ -171,7 +171,8 @@ export default function useWalletManager() {
 
       await initializeAccountData();
 
-      await checkPushPermissionAndRegisterToken();
+      console.log({ accountAddress });
+      // await checkPushPermissionAndRegisterToken();
       dispatch(appStateUpdate({ walletReady: true }));
     } catch (error) {
       logger.sentry('Error while initializing wallet', error);
@@ -188,6 +189,7 @@ export default function useWalletManager() {
     loadAccountData,
     network,
     initializeAccountData,
+    accountAddress,
   ]);
 
   const initWalletResetNavState = useCallback(
